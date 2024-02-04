@@ -3,10 +3,10 @@ name: pre-commit
 on:
   push:
     branches:
-      - aws_master
+      - master
   pull_request:
     branches:
-      - aws_master
+      - master
     types: [opened, synchronize, reopened]
 
   workflow_dispatch:
