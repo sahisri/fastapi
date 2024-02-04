@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 
-from fastapi import FastAPI,Response,status,HTTPException
+from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,10 +10,10 @@ import MySQLdb
 
 # Database configuration
 db_config = {
-    'host': 'mysql',
-    'user': 'fastapi',
-    'passwd': 'fastapi',
-    'db': 'testdb',
+    "host": "mysql",
+    "user": "fastapi",
+    "passwd": "fastapi",
+    "db": "testdb",
 }
 
 # Create a connection to the database
@@ -39,6 +40,7 @@ app.add_middleware(
 # https://medium.com/@miladev95/fastapi-crud-with-mysql-b06d33601a38
 # https://dassum.medium.com/building-rest-apis-using-fastapi-sqlalchemy-uvicorn-8a163ccf3aa1
 
+
 class User(BaseModel):
     name: str
     username: str
@@ -47,6 +49,7 @@ class User(BaseModel):
     website: Optional[str] = None
     vaccinated: bool = True
     age: int = Field(gt=0, lt=100)
+
 
 # get endpoint to get all posts
 @app.get("/users")
@@ -58,23 +61,33 @@ def get_users():
     items = cursor.fetchall()
     cursor.close()
     if items is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"There are no users")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There are no users")
     for item in items:
-        user = {"id": item[0], "name": item[1], "username": item[2], "email": item[3], "phone": item[4], "website": item[5]}
+        user = {
+            "id": item[0],
+            "name": item[1],
+            "username": item[2],
+            "email": item[3],
+            "phone": item[4],
+            "website": item[5],
+        }
         users.append(user)
     return users
 
+
 # post endpoint to add a post
-@app.post("/users",status_code=status.HTTP_201_CREATED)
-def create_users(user:User):
+@app.post("/users", status_code=status.HTTP_201_CREATED)
+def create_users(user: User):
     cursor = conn.cursor()
-    query = "INSERT INTO users (name, username, email, phone, website, vaccinated, age) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    query = (
+        "INSERT INTO users (name, username, email, phone, website, vaccinated, age) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    )
     cursor.execute(query, (user.name, user.username, user.email, user.phone, user.website, user.vaccinated, user.age))
     conn.commit()
     # user.id = cursor.lastrowid
     cursor.close()
     return user
+
 
 @app.get("/users/{user_id}")
 def get_user(user_id: int):
@@ -84,7 +97,6 @@ def get_user(user_id: int):
     item = cursor.fetchone()
     cursor.close()
     if item is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"user with id: {user_id} was not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with id: {user_id} was not found")
     user = {"id": item[0], "name": item[1], "username": item[2], "email": item[3], "phone": item[4], "website": item[5]}
     return user
