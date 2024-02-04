@@ -1,5 +1,5 @@
 name: pre-commit
-description: run pre-commit
+
 on:
   push:
     branches:
