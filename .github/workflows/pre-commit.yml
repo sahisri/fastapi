@@ -8,6 +8,9 @@ on:
     branches:
       - aws_master
     types: [opened, synchronize, reopened]
+
+  workflow_dispatch:
+
 inputs:
   extra_args:
     description: options to pass to pre-commit run
