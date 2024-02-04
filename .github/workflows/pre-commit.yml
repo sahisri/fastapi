@@ -42,4 +42,4 @@ jobs:
           path: ~/.cache/pre-commit
           key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - run: pre-commit run run -v --files ${{ steps.changed-files.outputs.all_changed_files }}
+      - run: pre-commit run -v --files ${{ steps.changed-files.outputs.all_changed_files }}
